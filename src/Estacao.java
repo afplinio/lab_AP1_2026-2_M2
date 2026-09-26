@@ -21,6 +21,7 @@ public class Estacao {
 
     /**
      * Adiciona patinete à frota se o código ainda não existir na estação.
+     * 
      * @return true se adicionou; false se nulo ou código duplicado
      */
     public boolean adicionar(Patinete p) {
@@ -38,11 +39,22 @@ public class Estacao {
 
     /**
      * Localiza pelo código; se estiver disponivel, inicia aluguel.
-     * @return true se iniciou o aluguel; false se não encontrou ou não está disponivel
+     * 
+     * @return true se iniciou o aluguel; false se não encontrou ou não está
+     *         disponivel
      */
     public boolean liberarDisponivel(String codigo) {
-        //TODO Tarefa 1
-        return false;
+        // TODO Tarefa 1
+        boolean valido = false;
+
+        for (Patinete patinete : patinetes) {
+            if (patinete.getCodigo().equals(codigo) && patinete.estado().equals("disponivel")) {
+                patinete.iniciarAluguel();
+                valido = true;
+            }
+        }
+
+        return valido;
     }
 
     public int totalPatinetes() {
@@ -75,8 +87,15 @@ public class Estacao {
      * Só em_uso (sem disponivel) → Double.MAX_VALUE.
      */
     public double aproveitamentoFrota() {
-        //TODO Tarefa 2
-        return 0.0;
+        // TODO Tarefa 2
+
+        double aproveitamento = (double)totalEmUso() / (double)(totalDisponiveis() + totalEmUso());
+
+        if (aproveitamento == 1) {
+            aproveitamento = Double.MAX_VALUE;
+        }
+
+        return aproveitamento;
     }
 
     /**
@@ -85,8 +104,19 @@ public class Estacao {
      * Empate total: false.
      */
     public boolean estaNaFrenteDe(Estacao outra) {
-        //TODO Tarefa 3
-        return false;
+        // TODO Tarefa 3
+        boolean verificacao = false;
+
+        if(this.aproveitamentoFrota() > outra.aproveitamentoFrota()){
+            verificacao = true;
+        }
+        else if(this.aproveitamentoFrota() == outra.aproveitamentoFrota()){
+            if(this.totalDisponiveis() > outra.totalDisponiveis()){
+                verificacao = true;
+            }
+        }
+
+        return verificacao;
     }
 
     /**
